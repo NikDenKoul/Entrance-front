@@ -35,7 +35,9 @@ class App extends React.Component {
             user_number: '',
             loaded_users: [],
             is_data_loading: false,
-            is_data_loaded: false
+            is_data_loaded: false,
+            email_error: '',
+            number_error: ''
         }
 
         this.handleEditField = this.handleEditField.bind(this);
@@ -46,9 +48,9 @@ class App extends React.Component {
 
     handleEditField(field_name, new_value) {
         if (field_name === 'email') {
-            this.setState({ user_email: new_value });
+            this.setState({ user_email: new_value, email_error: '' });
         } else if (field_name === 'number') {
-            this.setState({ user_number: new_value });
+            this.setState({ user_number: new_value, number_error: '' });
         }
     }
 
@@ -57,10 +59,16 @@ class App extends React.Component {
         e.preventDefault();
         if (is_data_loading) return;
 
-        if (!/^.+@\w+\.\w+$/.test(user_email)) return;
+        if (!/^.+@\w+\.\w+$/.test(user_email)) {
+            this.setState({ email_error: 'Incorrect email format.' });
+            return;
+        }
 
         user_number = user_number.replaceAll(/\D+/g, '');
-        if (user_number.length !== 0 && user_number.length !== 6) return;
+        if (user_number.length !== 0 && user_number.length !== 6) {
+            this.setState({ number_error: 'Number must be empty or full.' });
+            return;
+        }
 
         this.setState({ is_data_loading: true });
         fetch(`${this.server_path_name}/search?email=${user_email}&number=${user_number}`, request_options)
@@ -73,25 +81,35 @@ class App extends React.Component {
     }
 
     render() {
-        const { user_email, user_number, loaded_users, is_data_loading, is_data_loaded } = this.state;
+        const {
+            user_email, user_number, loaded_users, is_data_loading, is_data_loaded, email_error, number_error
+        } = this.state;
 
         return (
             <div className="App">
-                <header><h2><a href='/'>My App</a></h2></header>
+                <header><h2><a href='#'>My App</a></h2></header>
                 <main>
                     <form>
                         <h3>Search user</h3>
                         <div className='input_block'>
                             <label>Email: *</label>
-                            <input value={user_email} placeholder='email'
-                                   onChange={(e) => this.handleEditField('email', e.target.value)}
-                            />
+                            <div className='input_container' data-error={email_error.length > 0}
+                                 data-error-message={email_error}
+                            >
+                                <input value={user_email} placeholder='email'
+                                       onChange={(e) => this.handleEditField('email', e.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className='input_block'>
                             <label>Number:</label>
-                            <InputMask value={user_number} placeholder='number' mask='99-99-99'
-                                   onChange={(e) => this.handleEditField('number', e.target.value)}
-                            />
+                            <div className='input_container' data-error={number_error.length > 0}
+                                 data-error-message={number_error}
+                            >
+                                <InputMask value={user_number} placeholder='number' mask='99-99-99'
+                                       onChange={(e) => this.handleEditField('number', e.target.value)}
+                                />
+                            </div>
                         </div>
                         <button onClick={this.handleSearchData} disabled={is_data_loading}>SUBMIT</button>
                     </form>

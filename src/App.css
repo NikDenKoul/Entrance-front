@@ -89,8 +89,22 @@ form {
   text-align: left;
 }
 
-.input_block input {
+.input_container {
   flex: 4;
+}
+
+.input_container input {
+  width: 100%;
+}
+
+.input_container::after {
+  content: attr(data-error-message);
+  color: #FFAAAA;
+  font-size: 12px;
+}
+
+.input_container[data-error=true] input {
+  border-color: #FFAAAA;
 }
 
 .users_list {
