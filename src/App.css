@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #555A63;
   color: #E0F3FF;
 }
 
@@ -59,6 +58,7 @@ main {
   display: flex;
   flex-direction: column;
   flex: 1;
+  background-color: #555A63;
 }
 
 footer {
@@ -78,18 +78,6 @@ form {
   gap: 10px;
 }
 
-@media screen and (max-width: 800px) {
-  form {
-    margin: 10px auto;
-  }
-}
-
-@media screen and (max-width: 550px) {
-  form {
-    width: calc(100% - 60px);
-  }
-}
-
 .input_block {
   display: flex;
   gap: 10px;
@@ -103,4 +91,65 @@ form {
 
 .input_block input {
   flex: 4;
+}
+
+.users_list {
+  margin: 10px 30px;
+  width: calc(100% - 60px);
+}
+
+.users_list h3 {
+  text-align: left;
+}
+
+.users_grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 15px;
+}
+
+.user_card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #8A9399;
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.user_card .user_card__row {
+  display: flex;
+  gap: 10px;
+  text-align: left;
+}
+
+.user_card .user_card__row .left {
+  flex: 1;
+}
+
+.user_card .user_card__row .right {
+  flex: 4;
+}
+
+@media screen and (max-width: 800px) {
+  form,
+  .users_list {
+    margin: 10px auto;
+  }
+
+  .users_grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  form,
+  .users_list {
+    width: calc(100% - 60px);
+  }
+
+  .users_grid {
+    grid-template-columns: 1fr;
+  }
 }

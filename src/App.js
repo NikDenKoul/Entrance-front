@@ -9,13 +9,33 @@ const request_options = {
     },
 };
 
+const userCard = function (email, number, key) {
+    let formatted_number = `${number}`.split('');
+    formatted_number.splice(4,0,'-');
+    formatted_number.splice(2,0,'-');
+    formatted_number = formatted_number.join('');
+
+    return <div className='user_card' key={key}>
+        <div className='user_card__row'>
+            <span className='left'>Email:</span>
+            <span className='right'>{email}</span>
+        </div>
+        <div className='user_card__row'>
+            <span className='left'>Number:</span>
+            <span className='right'>{formatted_number}</span>
+        </div>
+    </div>;
+}
+
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user_email: '',
             user_number: '',
-            is_data_loading: false
+            loaded_users: [],
+            is_data_loading: false,
+            is_data_loaded: false
         }
 
         this.handleEditField = this.handleEditField.bind(this);
@@ -47,13 +67,13 @@ class App extends React.Component {
             .then(response => {
                 return response.json();
             }).then(data => {
-                console.log(data);
-                this.setState({ is_data_loading: false });
+                let loaded_users = data.matched_users?.map((item, key) => userCard(item.email, item.number, key));
+                this.setState({ is_data_loading: false, is_data_loaded: true, loaded_users: loaded_users });
             });
     }
 
     render() {
-        const { user_email, user_number, is_data_loading } = this.state;
+        const { user_email, user_number, loaded_users, is_data_loading, is_data_loaded } = this.state;
 
         return (
             <div className="App">
@@ -75,6 +95,16 @@ class App extends React.Component {
                         </div>
                         <button onClick={this.handleSearchData} disabled={is_data_loading}>SUBMIT</button>
                     </form>
+                    {is_data_loaded &&
+                        <div className='users_list'>
+                            <h3>{loaded_users?.length > 0 ? 'Found users:' : 'Nothing was found.'}</h3>
+                            {loaded_users?.length > 0 &&
+                                <div className='users_grid'>
+                                    {loaded_users}
+                                </div>
+                            }
+                        </div>
+                    }
                 </main>
                 <footer>© My app</footer>
             </div>
