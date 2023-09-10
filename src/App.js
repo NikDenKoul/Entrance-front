@@ -70,7 +70,7 @@ class App extends React.Component {
             return;
         }
 
-        this.setState({ is_data_loading: true });
+        this.setState({ is_data_loading: true, is_data_loaded: false });
         fetch(`${this.server_path_name}/search?email=${user_email}&number=${user_number}`, request_options)
             .then(response => {
                 return response.json();
@@ -89,6 +89,10 @@ class App extends React.Component {
             <div className="App">
                 <header><h2><a href='#'>My App</a></h2></header>
                 <main>
+                    {is_data_loading ?
+                        <div className='loader_outer'><div className='loader_inner'></div></div> :
+                        <div className='loader_placeholder'></div>
+                    }
                     <form>
                         <h3>Search user</h3>
                         <div className='input_block'>
