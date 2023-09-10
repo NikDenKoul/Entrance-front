@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  color: #E0F3FF;
 }
 
 .App-logo {
@@ -34,5 +38,161 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #454A4D;
+}
+
+header a {
+  text-decoration: none;
+  color: #CFDDE5;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #555A63;
+}
+
+footer {
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 15px 30px;
+  background-color: #454A4D;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: 10px 30px;
+  gap: 10px;
+}
+
+.input_block {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.input_block label {
+  flex: 1;
+  text-align: left;
+}
+
+.input_container {
+  flex: 4;
+}
+
+.input_container input {
+  width: 100%;
+}
+
+.input_container::after {
+  content: attr(data-error-message);
+  color: #FFAAAA;
+  font-size: 12px;
+}
+
+.input_container[data-error=true] input {
+  border-color: #FFAAAA;
+}
+
+.users_list {
+  margin: 10px 30px;
+  width: calc(100% - 60px);
+}
+
+.users_list h3 {
+  text-align: left;
+}
+
+.users_grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 15px;
+}
+
+.user_card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #8A9399;
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.user_card .user_card__row {
+  display: flex;
+  gap: 10px;
+  text-align: left;
+}
+
+.user_card .user_card__row .left {
+  flex: 1;
+}
+
+.user_card .user_card__row .right {
+  flex: 4;
+}
+
+.loader_placeholder {
+  width: 100%;
+  height: 5px;
+}
+
+.loader_outer {
+  width: 100%;
+  height: 5px;
+  display: flex;
+  animation: loading-outer 1.5s linear infinite;
+}
+
+.loader_inner {
+  height: 5px;
+  background-color: #8A9399;
+  animation: loading-inner 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-outer {
+  0% { flex-direction: row; }
+  100% { flex-direction: row-reverse; }
+}
+
+@keyframes loading-inner {
+  0% { width: 0; }
+  50% { width: 100%; }
+  100% { width: 0; }
+}
+
+@media screen and (max-width: 800px) {
+  form,
+  .users_list {
+    margin: 10px auto;
+  }
+
+  .users_grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  form,
+  .users_list {
+    width: calc(100% - 60px);
+  }
+
+  .users_grid {
+    grid-template-columns: 1fr;
   }
 }
