@@ -27,6 +27,14 @@ const userCard = function (email, number, key) {
     </div>;
 }
 
+const fetchData = async function (url) {
+    try {
+        return await fetch(url, request_options).then(data => data.json());
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +44,7 @@ class App extends React.Component {
             loaded_users: [],
             is_data_loading: false,
             is_data_loaded: false,
+            error_respond: '',
             email_error: '',
             number_error: ''
         }
@@ -71,19 +80,27 @@ class App extends React.Component {
         }
 
         this.setState({ is_data_loading: true, is_data_loaded: false });
-        fetch(`${this.server_path_name}/search?email=${user_email}&number=${user_number}`, request_options)
-            .then(response => {
-                return response.json();
-            }).then(data => {
-                let loaded_users = data.matched_users?.map((item, key) => userCard(item.email, item.number, key));
-                this.setState({ is_data_loading: false, is_data_loaded: true, loaded_users: loaded_users });
+        fetchData(`${this.server_path_name}/search?email=${user_email}&number=${user_number}`).then(data => {
+            let error_respond = '', loaded_users = [];
+            if (data == null) {
+                error_respond = 'Server doesn\'t respond.';
+            } else {
+                loaded_users = data.matched_users?.map((item, key) => userCard(item.email, item.number, key));
+                if (loaded_users.length === 0) error_respond = 'Nothing was found';
+            }
+            this.setState({
+                is_data_loading: false,
+                is_data_loaded: true,
+                loaded_users: loaded_users,
+                error_respond: error_respond
             });
+        });
+
     }
 
     render() {
-        const {
-            user_email, user_number, loaded_users, is_data_loading, is_data_loaded, email_error, number_error
-        } = this.state;
+        const { user_email, user_number, loaded_users, is_data_loading, is_data_loaded, email_error, number_error,
+            error_respond } = this.state;
 
         return (
             <div className="App">
@@ -119,7 +136,7 @@ class App extends React.Component {
                     </form>
                     {is_data_loaded &&
                         <div className='users_list'>
-                            <h3>{loaded_users?.length > 0 ? 'Found users:' : 'Nothing was found.'}</h3>
+                            <h3>{loaded_users?.length > 0 ? 'Found users:' : error_respond}</h3>
                             {loaded_users?.length > 0 &&
                                 <div className='users_grid'>
                                     {loaded_users}
